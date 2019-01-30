@@ -11,7 +11,7 @@ Font = @path + 'fonts/Cinzel-Regular.ttf'
 
 def main
 	$width, $height, $fps = 640, 480, 50
-	set title: 'Speed Match Statistics', width: $width, height: $height, fps_cap: $fps, background: 'white'
+	set title: 'Chalkboard Challenge Statistics', width: $width, height: $height, fps_cap: $fps, background: 'white'
 
 	$generate_colour = -> {
 		colour = ''
