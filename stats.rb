@@ -4,7 +4,7 @@
 
 require 'ruby2d'
 
-module Ruby2D def get_colour() [self.r, self.g, self.b, self.opacity] end end
+module Ruby2D def get_colour() [self.color.r, self.color.g, self.color.b, self.color.opacity] end end
 
 @path = File.dirname(__FILE__) + '/'
 Font = @path + 'fonts/Cinzel-Regular.ttf'
@@ -21,14 +21,14 @@ def main
 
 	$control = ->(object, type='reduce', val=0.05, threshold=0.6) {
 		if type.start_with?('r')
-			object.opacity -= val if object.opacity > threshold
+			object.color.opacity -= val if object.color.opacity > threshold
 		else
-			object.opacity += val if object.opacity < 1
+			object.color.opacity += val if object.color.opacity < 1
 		end
 	}
 
 	stat_bg = Image.new 'images/bg_stat_window.png', width: $width, height: $height
-	stat_bg.opacity = 0.2
+	stat_bg.color.opacity = 0.2
 
 	read_score = File.readlines('data/scorelist.data').last(7).map(&:to_i)
 	last_score = read_score[-2]
