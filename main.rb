@@ -7,8 +7,8 @@ module Ruby2D
 	def total_x() @x + @width end
 	def total_y() @y + @height end
 	def change_colour=(colour)
-		__opacity__, self.color = self.opacity, colour
-		self.opacity = __opacity__
+		__opacity__, self.color = self.color.opacity, colour
+		self.color.opacity = __opacity__
 		colour
 	end
 	def div_x(other) @x + @width/2 - other.width/2 end
@@ -189,10 +189,10 @@ def main
 	point.x, point.y = pointbox.div_x(point), pointbox.div_y(point)
 
 	# increase opacity
-	incop = -> (objects, max=1, step=0.03) { objects.each { |object| object.opacity += step if object.opacity < max } }
+	incop = -> (objects, max=1, step=0.03) { objects.each { |object| object.color.opacity += step if object.color.opacity < max } }
 
 	# decrease opacity
-	decop = -> (objects, min=0.6, step=0.03) { objects.each { |object| object.opacity -= step if object.opacity > min } }
+	decop = -> (objects, min=0.6, step=0.03) { objects.each { |object| object.color.opacity -= step if object.color.opacity > min } }
 
 	correct_img = Image.new @path + 'images/correct.png', opacity: 0
 	correct_img.width /= 3
@@ -225,11 +225,11 @@ def main
 				correct_sound.play
 
 				if card.equal?(card_a)
-					correct_img.x, correct_img.y, correct_img.opacity = card_a.div_x(correct_img), card_a.div_y(correct_img), 1
+					correct_img.x, correct_img.y, correct_img.color.opacity = card_a.div_x(correct_img), card_a.div_y(correct_img), 1
 				elsif card.equal?(card_b)
-					correct_img.x, correct_img.y, correct_img.opacity = card_b.div_x(correct_img), card_b.div_y(correct_img), 1
+					correct_img.x, correct_img.y, correct_img.color.opacity = card_b.div_x(correct_img), card_b.div_y(correct_img), 1
 				else
-					correct_img.x, correct_img.y, correct_img.opacity = equal.div_x(correct_img), equal.div_y(correct_img), 1
+					correct_img.x, correct_img.y, correct_img.color.opacity = equal.div_x(correct_img), equal.div_y(correct_img), 1
 				end
 
 				temp_a = Text.new(eval(math[0]), font: Font, size: Font_Size, color: '#ffffff', z: -1)
@@ -241,21 +241,21 @@ def main
 
 				if card.equal?(card_a)
 					card_a.color = '#ffa500'
-					wrong_img.x, wrong_img.y, wrong_img.opacity = card_a.div_x(wrong_img), card_a.div_y(wrong_img), 1
+					wrong_img.x, wrong_img.y, wrong_img.color.opacity = card_a.div_x(wrong_img), card_a.div_y(wrong_img), 1
 				elsif card.equal?(card_b)
 					card_b.color = '#ffa500'
-					wrong_img.x, wrong_img.y, wrong_img.opacity = card_b.div_x(wrong_img), card_b.div_y(wrong_img), 1
+					wrong_img.x, wrong_img.y, wrong_img.color.opacity = card_b.div_x(wrong_img), card_b.div_y(wrong_img), 1
 				else
 					equal.color = '#ffa500'
-					wrong_img.x, wrong_img.y, wrong_img.opacity = equal.div_x(wrong_img), equal.div_y(wrong_img), 1
+					wrong_img.x, wrong_img.y, wrong_img.color.opacity = equal.div_x(wrong_img), equal.div_y(wrong_img), 1
 				end
 
 				temp_a = Text.new(eval(math[0]), font: Font, size: Font_Size, color: '#000000', z: -1)
 				temp_b = Text.new(eval(math[1]), font: Font, size: Font_Size, color: '#000000', z: -1)
 			end
 
-			temp_a.x, temp_a.y, temp_a.opacity = card_a.div_x(temp_a), card_a.div_y(temp_a), 1
-			temp_b.x, temp_b.y, temp_b.opacity = card_a.div_x(temp_b), card_b.div_y(temp_b), 1
+			temp_a.x, temp_a.y, temp_a.color.opacity = card_a.div_x(temp_a), card_a.div_y(temp_a), 1
+			temp_b.x, temp_b.y, temp_b.color.opacity = card_a.div_x(temp_b), card_b.div_y(temp_b), 1
 
 			final_results_a.push(temp_a)
 			final_results_b.push(temp_b)
@@ -296,14 +296,14 @@ def main
 			check.call(result1 == result2, equal)
 		end
 
-		started_var += 1 if (play.contain?(e) && play.opacity > 0.5) || (play_big.contain?(e) && play_big.opacity > 0.5) || (pause.contain?(e) && pause.opacity > 0.5)
+		started_var += 1 if (play.contain?(e) && play.color.opacity > 0.5) || (play_big.contain?(e) && play_big.color.opacity > 0.5) || (pause.contain?(e) && pause.color.opacity > 0.5)
 
-		close if power.contain?(e) && power.opacity > 0.4
+		close if power.contain?(e) && power.color.opacity > 0.4
 
-		if screenshot.contain?(e) && screenshot.opacity > 0.4
+		if screenshot.contain?(e) && screenshot.color.opacity > 0.4
 			temp = @path + "screenshots/#{Time.new.strftime('%F-%H:%M:%S.png')}"
 			Window.screenshot(temp)
-			screenshot_message.text, screenshot_message.opacity = "Screenshot saved to #{temp}", 1
+			screenshot_message.text, screenshot_message.color.opacity = "Screenshot saved to #{temp}", 1
 			screenshot_message.x, screenshot_message.y = @width/2 - screenshot_message.width/2, screenshot.total_y + 5
 		end
 
@@ -313,7 +313,7 @@ def main
 			started_var = 0
 		end
 
-		Thread.new { system('ruby', 'stats.rb') } if about.contain?(e) && about.opacity > 0.4
+		Thread.new { system('ruby', 'stats.rb') } if about.contain?(e) && about.color.opacity > 0.4
 	end
 
 	on :key_down do |k|
@@ -334,7 +334,7 @@ def main
 		if started_var % 2 == 0
 			unless started
 				counter += 1
-				countdown.opacity = 1
+				countdown.color.opacity = 1
 
 				case counter
 					when 0...60
@@ -353,7 +353,7 @@ def main
 
 				countdown.x, countdown.y = @width/2 - countdown.width/2, screenshot.y - countdown.height
 			else
-				countdown.opacity = 0
+				countdown.color.opacity = 0
 			end
 		else
 			started = false
@@ -382,13 +382,13 @@ def main
 				started_var += 1
 
 				card_a.color = card_b.color = equal.color = '#ffffff'
-				correct_img.opacity = wrong_img.opacity = 0
+				correct_img.color.opacity = wrong_img.color.opacity = 0
 
 				incop.call([final_point])
 				final_point.text = "Final Score: #{score}"
 
 				final_point.x, final_point.y = @width/2 - final_point.width/2, card_a.y - final_point.height - 5
-				final_point.opacity = 1
+				final_point.color.opacity = 1
 
 				File.open(@path + 'data/scorelist.data', 'a') { |file| file.puts(score) }
 
@@ -433,7 +433,7 @@ def main
 		# Text animation and correct_img, wrong_img animation
 		if card_pressed
 			decop.call([card_a_text, card_b_text], 0, 0.09)
-			card_pressed = false if card_a_text.opacity <= 0
+			card_pressed = false if card_a_text.color.opacity <= 0
 			incop.call([card_a_glow_correct, card_b_glow_correct], 1, 0.1)
 		else
 			incop.call([card_a_text, card_b_text], 1, 0.09)
@@ -455,7 +455,7 @@ def main
 			decop.call([val_a], 0, 0.01)
 			val_a.y -= 2
 
-			if val_a.opacity <= 0
+			if val_a.color.opacity <= 0
 				val_a.remove
 				final_results_a.delete(val_a)
 			end
@@ -465,7 +465,7 @@ def main
 			decop.call([val_b], 0, 0.005)
 			val_b.y += 2
 
-			if val_b.opacity <= 0
+			if val_b.color.opacity <= 0
 				val_b.remove
 				final_results_b.delete(val_b)
 			end
@@ -476,8 +476,8 @@ def main
 			val = particles[i]
 			val.x -= Math.sin(i)
 			val.y -= particle_speed[i]
-			val.opacity -= 0.004
-			val.x, val.y, val.color, val.opacity, particle_speed[i] = rand(0..@width), @height, "##{SecureRandom.hex(3)}", 1, rand(1.0..6.0) if (val.y <= -val.height || val.opacity <= 0)
+			val.color.opacity -= 0.004
+			val.x, val.y, val.color, val.color.opacity, particle_speed[i] = rand(0..@width), @height, "##{SecureRandom.hex(3)}", 1, rand(1.0..6.0) if (val.y <= -val.height || val.color.opacity <= 0)
 		end
 	end
 end
